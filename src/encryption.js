@@ -1,12 +1,13 @@
-var crypto = require('crypto');
-var iv = new Buffer('');
+const crypto = require('crypto');
+const iv = new Buffer.from('');
+const { decryptPassword, encryptPassword } = require('./config/passwords');
 
-var PADDING_LENGTH = 16;
-var PADDING = Array(PADDING_LENGTH).join('\0');
+const PADDING_LENGTH = 16;
+const PADDING = Array(PADDING_LENGTH).join('\0');
 
-var createCryptor = function(key) {
-	key = new Buffer(key);
-	return function(data) {
+const createCryptor = key => {
+	key = new Buffer.from(key);
+	return data => {
 		var cipher = crypto.createCipheriv('bf-ecb', key, iv);
 		cipher.setAutoPadding(false);
 		var padLength = PADDING_LENGTH - (data.length % PADDING_LENGTH);
@@ -24,8 +25,8 @@ var createCryptor = function(key) {
 	};
 };
 
-var createDecryptor = function(key) {
-	key = new Buffer(key);
+const createDecryptor = key => {
+	key = new Buffer.from(key);
 	return function(data) {
 		var cipher = crypto.createDecipheriv('bf-ecb', key, iv);
 		cipher.setAutoPadding(false);
@@ -37,16 +38,14 @@ var createDecryptor = function(key) {
 	};
 };
 
-exports.decrypt = function(password, ciphered) {
-	var blowfish = createDecryptor(password);
-	var buff = blowfish(new Buffer(ciphered, 'hex'));
-
+exports.decrypt = cipher => {
+	var blowfish = createDecryptor(decryptPassword);
+	var buff = blowfish(new Buffer.from(cipher, 'hex'));
 	return buff;
 };
 
-exports.encrypt = function(password, plain) {
-	var blowfish = createCryptor(password);
+exports.encrypt = plain => {
+	var blowfish = createCryptor(encryptPassword);
 	var buff = blowfish(plain);
-
 	return buff;
 };
