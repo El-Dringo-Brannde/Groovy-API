@@ -1,0 +1,26 @@
+{
+  "name": "groovy-api",
+  "version": "1.0.0",
+  "description": "An API around anesidora player",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/El-Dringo-Brannde/Groovy-API.git"
+  },
+  "keywords": [
+    "Pandora"
+  ],
+  "author": "Brandon Dring",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/El-Dringo-Brannde/Groovy-API/issues"
+  },
+  "homepage": "https://github.com/El-Dringo-Brannde/Groovy-API#readme",
+  "dependencies": {
+    "anesidora": "^1.2.1",
+    "request-promise": "^4.2.2"
+  }
+}
