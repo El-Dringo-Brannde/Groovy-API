@@ -43,7 +43,7 @@ class Groovy {
 			qs: {
 				method: 'auth.userLogin',
 				auth_token: this.partner.partnerAuthToken,
-				partner_id: this.partner.partner_id
+				partner_id: this.partner.partnerId
 			},
 			body: encrypt(
 				JSON.stringify({
