@@ -38,6 +38,7 @@ class Groovy {
 	}
 
 	async _userLogin() {
+		console.log(this.partner, this.username, this.password)
 		let res = await request.post(ENDPOINT, {
 			qs: {
 				method: 'auth.userLogin',
@@ -68,5 +69,5 @@ class Groovy {
 	}
 }
 
-let Groov = new Groovy('Brandon.d.junk@gmail.com', 'Beandip95');
+let Groov = new Groovy(process.env.EMAIL, process.env.PASSWORD);
 Groov.login();
