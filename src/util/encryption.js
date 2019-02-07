@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const iv = new Buffer.from('');
-const { decryptPassword, encryptPassword } = require('./config/passwords');
+const { decryptPassword, encryptPassword } = require('../config/passwords');
 
 const PADDING_LENGTH = 16;
 const PADDING = Array(PADDING_LENGTH).join('\0');
