@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/El-Dringo-Brannde/Groovy-API#readme",
   "dependencies": {
-    "anesidora": "^1.2.1",
-    "request-promise": "^4.2.2"
+    "axios": "^0.18.0"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
   }
 }

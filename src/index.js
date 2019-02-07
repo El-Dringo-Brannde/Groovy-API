@@ -1,4 +1,4 @@
-let request = require('request-promise');
+let axios = require('axios');
 
 const partnerAuth = require('./config/partnerAuth');
 
@@ -6,7 +6,7 @@ const { encrypt, decrypt } = require('./encryption');
 
 const ENDPOINT = `https://tuner.pandora.com/services/json/`;
 
-class Groovy {
+ module.exports = class Groovy {
 	constructor(username, password) {
 		this.username = username;
 		this.password = password;
@@ -19,60 +19,67 @@ class Groovy {
 		this.user = await this._userLogin();
 	}
 
-	async request(method, data = {}) {
+	async request(method, dataOut = {}) {
 		if (!this.partner && !this.user)
 			throw new Error(`Please authenicate with login() before making requests`)
 		
-		data = this._buildRequestBody(data)
+		dataOut = this._buildRequestBody(dataOut)
 		
-		let res = await request.post(ENDPOINT, {
-			qs: {
-				method: method,
-				auth_token: this.user.result.userAuthToken,
+		const { data } = await axios({
+			url: ENDPOINT, 
+			method: 'POST',
+			params: {
+				method,
+				auth_token: this.user.userAuthToken,
 				partner_id: this.partner.partnerId,
-				user_id: this.user.result.userId
+				user_id: this.user.userId
 			},
-			body: this._encryptBody(data)
+			data: this._encryptBody(dataOut),
+			headers: { 'Content-Type': 'text/plain' }
 		})
-		this._checkRequestStatus(res, method)
-		return JSON.parse(res)
+		this._checkRequestStatus(data, method)
+		return data
 	}
 
 	async _partnerLogin() {
-		let res = await request.post(ENDPOINT, {
-			qs: {
-				method: 'auth.partnerLogin'
-			},
-			body: JSON.stringify(partnerAuth)
-		});
-		res = JSON.parse(res);
-		this._checkRequestStatus(res, 'partnerLogin')
+		let { data } = await axios.post(ENDPOINT, { ...partnerAuth }, {params: {method: 'auth.partnerLogin'}});
+		
+		data = this._checkRequestStatus(data, 'partnerLogin')
 
-		res.result.syncTimeOffset =
-			this._decryptSyncTime(res.result.syncTime) - this._seconds;
+		data.syncTimeOffset =
+			this._decryptSyncTime(data.syncTime) - this._seconds;
 
-		return res.result;
+		return data;
 	}
 
-	async _userLogin() {
-		let res = await request.post(ENDPOINT, {
-			qs: {
+	 async _userLogin() {
+		 const { data } = await axios({
+			 method: 'POST', 
+			 url: ENDPOINT,
+			 params: {
 				method: 'auth.userLogin',
 				auth_token: this.partner.partnerAuthToken,
 				partner_id: this.partner.partnerId
 			},
-			body: this._userLoginBody
-		});
-		return this._checkRequestStatus(JSON.parse(res), 'userLogin');
+			 data: this._encryptBody({
+				loginType: 'user',
+				username: this.username,
+				password: this.password,
+				partnerAuthToken: this.partner.partnerAuthToken,
+				syncTime: this.partner.syncTimeOffset + this._seconds
+			}),
+			 headers: { 'Content-Type': 'text/plain' }
+		 });
+		return this._checkRequestStatus(data, 'userLogin');
 	}
 
 	_checkRequestStatus(json, method) {
 		if (json.stat != 'ok') throw new Error(`Unable to perform request on method ${method}, please try again`)
-		else return json
+		else return json.result
 	}
 
 	_buildRequestBody(body) {
-		const auth = { userAuthToken: this.user.result.userAuthToken, syncTime: this.partner.syncTimeOffset + this._seconds}
+		const auth = { userAuthToken: this.user.userAuthToken, syncTime: this.partner.syncTimeOffset + this._seconds }
 		return  {...body, ...auth }
 	}
 
@@ -84,25 +91,11 @@ class Groovy {
 			.toLowerCase()
 	}
 
-	get _userLoginBody() {
-		return encrypt(
-			JSON.stringify({
-				loginType: 'user',
-				username: this.username,
-				password: this.password,
-				partnerAuthToken: this.partner.partnerAuthToken,
-				syncTime: this.partner.syncTimeOffset + this._seconds
-			})
-		)
-			.toString('hex')
-			.toLowerCase()
-	}
-
-	get _seconds() {
-		return (Date.now() / 1000) | 0;
-	}
-
 	_decryptSyncTime(ciphered) {
 		return parseInt(decrypt(ciphered).toString('utf8', 4, 14), 10);
 	}
-}
+	 
+	get _seconds() {
+		return (Date.now() / 1000) | 0;
+	}
+ }
