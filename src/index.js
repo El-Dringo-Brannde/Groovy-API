@@ -8,6 +8,8 @@ const ENDPOINT = `https://tuner.pandora.com/services/json/`;
 
 module.exports = class Groovy {
 	constructor(username, password) {
+		if (!username && !password)
+			throw new Error('Did not provide credentials');
 		this.username = username;
 		this.password = password;
 		this.user;

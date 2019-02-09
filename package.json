@@ -1,10 +1,10 @@
 {
   "name": "groovy-api",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "An NPM package around the unofficial Pandora API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/.bin/mocha ./tests/*",
     "prettier": "node ./node_modules/.bin/prettier --config .prettierrc.json  './src/**/*.js' --write"
   },
   "repository": {
@@ -12,9 +12,11 @@
     "url": "git+https://github.com/El-Dringo-Brannde/Groovy-API.git"
   },
   "keywords": [
-    "Pandora", 
+    "Pandora",
     "Music",
-    "Streaming"
+    "Streaming", 
+    "REST", 
+    "API"
   ],
   "author": "Brandon Dring",
   "license": "MIT",
@@ -26,6 +28,7 @@
     "axios": "^0.18.0"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "prettier": "^1.16.4"
   }
