@@ -9,18 +9,18 @@ The list of valid requests to the API can be found [here](https://6xq.net/pandor
 
 Simply import the package into your project with import or ES6
 
-`import Groovy from 'Groov'` 
+`import Groovy from 'groo-v'` 
 
 or in NodeJS 
 
-`const Groovy = require('Groov')`
+`const Groovy = require('groo-v')`
 
 ## Usage 
 
 Firstly, one would need to provide their Pandora credentials when calling the construtor, for example: 
 
 ```javascript
-const Groov = require('Groov')
+const Groov = require('groo-v')
 
 const pandora = new Groov('USERNAME', 'PASSWORD')
 ```
@@ -30,7 +30,7 @@ Secondly, they would have to call the `login` function and `await` it appropriat
 I.E: 
 
 ```javascript
-const Groov = require('Groov')
+const Groov = require('groo-v')
 
 const pandora = new Groov('USERNAME', 'PASSWORD')
 
@@ -43,7 +43,7 @@ Lastly, now that you have been authenicated, you can now call unofficial [reques
 For example: 
 
 ```javascript
-const Groov = require('Groov')
+const Groov = require('groo-v')
 
 const pandora = new Groov('USERNAME', 'PASSWORD')
 

@@ -1,11 +1,12 @@
 {
-  "name": "groovy-api",
-  "version": "0.1.0",
+  "name": "groo-v",
+  "version": "0.1.1",
   "description": "An NPM package around the unofficial Pandora API",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha ./tests/*",
-    "prettier": "node ./node_modules/.bin/prettier --config .prettierrc.json  './src/**/*.js' --write"
+    "prettier": "node ./node_modules/.bin/prettier --config .prettierrc.json  './src/**/*.js' --write", 
+    "deploy": "npm publish"
   },
   "repository": {
     "type": "git",
